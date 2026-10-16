@@ -13,11 +13,13 @@ routes = {"R1": {"name": "Main Gate - Library", "trips": []},
           "R3": {"name": "Admin Block - Metro", "trips": []}}
 MIN_CAPACITY = 10
 
+
 def get_route(route_id):
     """Return the route record, or raise ValueError if it does not exist."""
     if route_id not in routes:
         raise ValueError(f"Unknown route: {route_id}")
     return routes[route_id]
+
 
 def add_trip_log(route_id, passenger_count, logs=None):
     """Record a trip's passenger count and return the list of log lines.
@@ -33,13 +35,16 @@ def add_trip_log(route_id, passenger_count, logs=None):
     if logs is None:
         logs = []
     route["trips"].append(passenger_count)
-    logs.append(f"{datetime.now()}: {route_id} carried {passenger_count}")
+    logs.append(
+        f"{datetime.now()}: {route_id} carried {passenger_count}")
     return logs
+
 
 def remove_route(route_id):
     """Delete a route; raises ValueError if it does not exist."""
     get_route(route_id)
     del routes[route_id]
+
 
 def average_load(route_id):
     """Return the mean passengers per trip; ValueError if no trips logged."""
@@ -47,6 +52,7 @@ def average_load(route_id):
     if not trips:
         raise ValueError(f"No trips logged for {route_id}")
     return sum(trips) / len(trips)
+
 
 def underused_routes():
     """Return the ids of routes whose average load is below MIN_CAPACITY."""
@@ -56,16 +62,19 @@ def underused_routes():
             flagged.append(route_id)
     return flagged
 
+
 def assign_driver(route_id):
     """Pick a driver at random for an existing route."""
     get_route(route_id)
     drivers = ["Prakash", "Leela", "Imran", "Tom"]
     return secrets.choice(drivers)
 
+
 def sync_fleet_data(file="fleet.json"):
     """Write the current fleet data to a JSON file."""
     with open(file, "w", encoding="utf-8") as handle:
         json.dump(routes, handle)
+
 
 def main():
     """Run the demo: log trips, report loads, sync data, remove a route."""
@@ -89,6 +98,7 @@ def main():
             print(label + ":", lookup())
         except ValueError as err:
             print(err)
+
 
 if __name__ == "__main__":
     main()
